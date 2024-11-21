@@ -8,13 +8,13 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install flask
 
 # Copy the rest of the application code
-COPY app.py .
+COPY python.py .
 
 # Expose the application port
 EXPOSE 5000
 
 # Define the command to run the application
-CMD ["python", "app.py"]
+CMD ["python", "python.py"]
