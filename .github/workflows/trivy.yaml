@@ -18,11 +18,11 @@ jobs:
     - name: Install Trivy
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
-        chmod +x trivy
+        export PATH=$PATH:./bin
 
     - name: Scan Docker Image with Trivy and Generate HTML Report
       run: |
-        ./trivy image --format template --template "@contrib/html.tpl" -o trivy-report.html my-image:latest
+        ./bin/trivy image --format template --template "@contrib/html.tpl" -o trivy-report.html my-image:latest
 
     - name: Set up AWS CLI
       uses: aws-actions/configure-aws-credentials@v1
@@ -33,5 +33,4 @@ jobs:
 
     - name: Upload Trivy Report to S3
       run: aws s3 cp trivy-report.html s3://my-trivy-reports/trivy-report.html
-
 
