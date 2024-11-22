@@ -44,6 +44,7 @@ jobs:
           --exact-timestamps
           --acl public-read
           --include "trivy-report.txt"  # Only upload the report
+          --exclude "*"  # Exclude everything else
       env:
         SOURCE_DIR: .
         AWS_S3_BUCKET: my-trivy-reports
