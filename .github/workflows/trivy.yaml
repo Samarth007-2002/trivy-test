@@ -19,15 +19,8 @@ jobs:
       uses: aquasecurity/trivy-action@0.28.0
       with:
         image-ref: my-image:latest
-        format: table # Table format output
-        output: trivy-report.txt # Save output as text file
-
-    - name: Scan Docker Image with Trivy in HTML format
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        image-ref: my-image:latest
-        format: html # HTML format output
-        output: trivy-report.html # Save output as HTML file
+        format: table
+        output: trivy-report.html
 
     - name: Set up AWS CLI
       uses: aws-actions/configure-aws-credentials@v1
@@ -36,10 +29,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1 # Change this to your preferred region
 
-    - name: Upload Trivy Table Report to S3
-      run: aws s3 cp trivy-report.txt s3://my-trivy-reports/trivy-report.txt
-
-    - name: Upload Trivy HTML Report to S3
-      run: aws s3 cp trivy-report.html s3://my-trivy-reports/trivy-report.html
-
+    - name: Upload Trivy Report to S3
+      run: aws s3 cp trivy-report.txt s3://my-trivy-reports/trivy-report.html
 
