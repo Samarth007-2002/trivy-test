@@ -15,33 +15,12 @@ jobs:
     - name: Build Docker Image
       run: docker build -t my-image:latest .
 
-    - name: Scan Docker Image (SARIF Format)
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        image-ref: my-image:latest
-        format: sarif  # SARIF format
-        output: trivy-report.sarif
-
     - name: Scan Docker Image (Table Format)
       uses: aquasecurity/trivy-action@0.28.0
       with:
         image-ref: my-image:latest
         format: table  # Table format
         output: trivy-report.txt
-
-    - name: Scan Docker Image (GitHub Format)
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        image-ref: my-image:latest
-        format: github  # GitHub format
-        output: trivy-report.github
-
-    - name: Scan Docker Image (CycloneDX Format)
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        image-ref: my-image:latest
-        format: cyclonedx  # CycloneDX format
-        output: trivy-report.cyclonedx
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v3
