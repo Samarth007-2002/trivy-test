@@ -15,6 +15,14 @@ jobs:
     - name: Build Docker Image
       run: docker build -t my-image:latest .
 
+    - name: Cache Trivy DB
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/trivy
+        key: trivy-db-${{ runner.os }}-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
+          trivy-db-${{ runner.os }}-
+
     - name: Scan Docker Image (Table Format)
       uses: aquasecurity/trivy-action@0.28.0
       with:
@@ -29,15 +37,15 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Upload Reports to S3
+    - name: Upload Trivy Report to S3
       uses: jakejarvis/s3-sync-action@v0.5.1
       with:
         args: |
           --exact-timestamps
           --acl public-read
+          --include "trivy-report.txt"  # Only upload the report
       env:
         SOURCE_DIR: .
         AWS_S3_BUCKET: my-trivy-reports
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
 
