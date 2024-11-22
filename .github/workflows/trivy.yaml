@@ -27,7 +27,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        regions: us-east-1 # Change this to your preferred region
+        aws-region: us-east-1 # Change this to your preferred region
 
     - name: Upload Trivy Report to S3
       run: aws s3 cp trivy-report.txt s3://my-trivy-reports/trivy-report.txt
