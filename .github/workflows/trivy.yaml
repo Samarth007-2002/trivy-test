@@ -15,15 +15,28 @@ jobs:
     - name: Build Docker Image
       run: docker build -t my-image:latest .
 
-    - name: Scan Docker Image with Trivy
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        image-ref: my-image:latest
-        format: json
-        output: trivy-report.json
+    - name: Scan Docker Image (Multiple Formats)
+      run: |
+        trivy image --format sarif -o trivy-report.sarif my-image:latest
+        trivy image --format markdown -o trivy-report.md my-image:latest
+        trivy image --format html -o trivy-report.html my-image:latest
+        trivy image --format table -o trivy-report.txt my-image:latest
 
-    - name: Upload Trivy Report as Artifact
-      uses: actions/upload-artifact@v3
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v3
       with:
-        name: trivy-report
-        path: trivy-report.json
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Upload Reports to S3
+      uses: jakejarvis/s3-sync-action@v0.5.1
+      with:
+        args: |
+          --exact-timestamps
+          --acl public-read
+      env:
+        SOURCE_DIR: .
+        AWS_S3_BUCKET: my-trivy-reports
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
