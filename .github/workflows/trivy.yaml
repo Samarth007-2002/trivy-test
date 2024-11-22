@@ -16,11 +16,32 @@ jobs:
       run: docker build -t my-image:latest .
 
     - name: Scan Docker Image (Multiple Formats)
-      run: |
-        trivy image --format sarif -o trivy-report.sarif my-image:latest
-        trivy image --format markdown -o trivy-report.md my-image:latest
-        trivy image --format html -o trivy-report.html my-image:latest
-        trivy image --format table -o trivy-report.txt my-image:latest
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: my-image:latest
+        format: sarif  # SARIF format
+        output: trivy-report.sarif
+
+    - name: Scan Docker Image (Markdown Format)
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: my-image:latest
+        format: markdown  # Markdown format
+        output: trivy-report.md
+
+    - name: Scan Docker Image (HTML Format)
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: my-image:latest
+        format: html  # HTML format
+        output: trivy-report.html
+
+    - name: Scan Docker Image (Table Format)
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: my-image:latest
+        format: table  # Table format
+        output: trivy-report.txt
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v3
