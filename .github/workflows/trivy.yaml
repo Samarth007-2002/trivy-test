@@ -19,9 +19,9 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/trivy
-        key: trivy-db-${{ runner.os }}-${{ hashFiles('**/Dockerfile') }}
+        key: trivy-db-${{ runner.os }}-v0.56.1  # Make key more stable (based on version)
         restore-keys: |
-          trivy-db-${{ runner.os }}-
+          trivy-db-${{ runner.os }}-v0.56.1
 
     - name: Scan Docker Image (Table Format)
       uses: aquasecurity/trivy-action@0.28.0
